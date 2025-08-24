@@ -15,13 +15,9 @@ Research Professor
 
 
 <div style="border: 2px solid #4CAF50; border-radius: 8px; padding: 20px; margin: 20px 0; background-color: #f8fff8;">
-<strong>I will be joining <a href="https://www.dgist.ac.kr/">DGIST</a> (Daegu Gyeongbuk Institute of Science and Technology) as an Assistant Professor in the <a href="https://ee.dgist.ac.kr/">Department of Electrical Engineering and Computer Science</a> starting in September 2025!</strong>
-
-<p><strong>🎓 I am actively recruiting motivated graduate/undergraduate students and postdocs to join my research group at DGIST. If you are interested in working on programming languages, program synthesis, or related areas, please feel free to reach out at <a href="mailto:minseok_jeon@dgist.ac.kr">minseok_jeon@dgist.ac.kr</a>!</strong></p>
+I moved to DGIST Electrical Engineering and Computer Science. Here is my new website: <a href="https://dgistpl.github.io/">https://dgistpl.github.io/. </a>This website is no longer updated since September 2025.
 </div>
 
- 
-  
 # About Me
 I am a research professor at [Korea University](https://www.korea.ac.kr/). 
 I received my Ph.D. from [Software Analysis Laboratory](https://prl.korea.ac.kr/) at [Korea University](https://www.korea.ac.kr/) under the supervision of [Prof. Hakjoo Oh](https://prl.korea.ac.kr/members/hakjoo-oh/). 
