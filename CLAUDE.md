@@ -4,123 +4,82 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is Minseok Jeon's personal academic homepage built with Jekyll using the Minimal Mistakes theme. The site serves as both a portfolio and blog for a research professor at Korea University, showcasing research publications, academic activities, and course materials.
+Minseok Jeon's academic homepage — a Jekyll site using the Minimal Mistakes theme (v4.24.0), deployed via GitHub Pages on push to `master`. The site showcases research publications, blog posts (research stories in Korean), and course materials.
 
 ## Development Commands
 
-### Setup
 ```bash
-bundle install    # Install Ruby gems (Jekyll dependencies)
-npm install      # Install Node.js dependencies (for JavaScript build tools)
+# Setup
+bundle install          # Install Ruby gems
+npm install             # Install Node.js dependencies
+
+# Local development
+bundle exec jekyll serve   # Dev server at http://localhost:4000
+bundle exec jekyll build   # Production build (outputs to _site/)
+
+# JavaScript (required before committing JS changes)
+npm run build:js           # Minify + add banner (uglify then add-banner)
+npm run watch:js           # Auto-rebuild on JS file changes
 ```
 
-### Build and Serve
-```bash
-bundle exec jekyll serve    # Start development server at http://localhost:4000
-bundle exec jekyll build    # Build the site for production (outputs to _site/)
-```
-
-### JavaScript Development  
-```bash
-npm run build:js    # Build and minify JavaScript files (runs uglify + add-banner)
-npm run uglify      # Minify JavaScript assets only
-npm run add-banner  # Add banner to JavaScript files only
-npm run watch:js    # Watch JavaScript files for changes and auto-rebuild
-```
-
-### Testing and Validation
-- No automated tests configured - manual testing via local server required
-- Check Firebase view counter functionality on localhost:4000
-- Validate JavaScript minification with `npm run build:js`
+No automated tests — manual testing via local server only.
 
 ## Architecture
 
-### Jekyll Site Structure
-- **Theme**: Uses Minimal Mistakes Jekyll theme with extensive customizations
-- **Content Types**: 
-  - Academic homepage (`index.md`)
-  - Blog posts in `_posts/` (research updates and experiences)
-  - Course materials in `courses/` directory
-  - Static assets (papers, slides) in dedicated folders
+### What's Customized (vs stock Minimal Mistakes)
 
-### Custom Features
-- **Firebase View Counter**: Custom view tracking system using Firebase Realtime Database
-  - Configuration in `_config.yml` under `firebase:` section  
-  - Implementation files:
-    - `_includes/firebase-config.html`: Firebase SDK initialization and global setup
-    - `_includes/view-counter.html`: View counting logic with localStorage fallback
-  - Features:
-    - Session-based counting (one count per session per page)
-    - Automatic fallback to localStorage if Firebase unavailable
-    - Integration with Google Analytics event tracking
-    - Real-time view count display with number formatting
+The theme is largely stock. These are the key customizations:
 
-### Key Customizations
-- **Author Profile**: Enhanced author profile with post-specific version (`_includes/author-profile-post.html`)
-- **View Counter Integration**: Added to page meta information and post layouts
-- **Google Analytics**: Configured with gtag.js (tracking ID: G-KTKXXC6BCQ)
+1. **Firebase View Counter** — the main custom feature
+   - `_includes/firebase-config.html`: Loads Firebase SDK v12.0.0 via CDN, exposes `window.firebaseApp`, `window.firebaseDatabase`, `window.firebaseRef`, etc.
+   - `_includes/view-counter.html`: Session-based counting (one count per session per page), localStorage fallback if Firebase unavailable, Google Analytics event integration
+   - `_layouts/default.html`: Modified to include `firebase-config.html` before closing `</body>`
+   - `_includes/page__meta.html`: Modified to display view count alongside date and read time
+   - Firebase config is duplicated in both `_config.yml` (under `firebase:` key) and hardcoded in `firebase-config.html` — keep both in sync when changing
+   - Database keys are cleaned URLs with special chars (`.#$[]`) removed
+   - API keys are intentionally public (read-only database rules)
 
-### File Organization
-- `_includes/`: Custom HTML includes for modular components
-- `_layouts/`: Page layout templates (customized default.html)
-- `_sass/`: SCSS stylesheets (inherits from Minimal Mistakes)
-- `assets/`: Static assets including custom JavaScript and images
-- `courses/`: Course-specific content and materials
-- `papers/`: PDF files for research papers and slides
-- `images/`: Image assets for posts and pages
+2. **Author Profiles** — `_includes/author-profile.html` and `_includes/author-profile-post.html` (post-specific variant)
 
-## Firebase Configuration
+3. **Google Analytics** — gtag.js with tracking ID `G-KTKXXC6BCQ`
 
-The site uses Firebase for view counting functionality:
-- Database: Firebase Realtime Database
-- Configuration stored in `_config.yml` 
-- API keys and configuration are public (read-only database rules)
-- Setup documentation available in `FIREBASE_SETUP.md`
+Everything else (layouts, SCSS, JS core) is unmodified Minimal Mistakes.
 
-## Content Management
+### Data Files
 
-### Adding Blog Posts
-- Create files in `_posts/` with format: `YYYY-MM-DD-title.md`
-- Use `layout: single` for consistency
-- Include appropriate front matter for author profile and metadata
+- `_data/navigation.yml`: Main nav with "Courses" and "연구 이야기" (Research Stories) links
+- `_data/authors.yml`: Author profile data (name, Korean name, avatar)
 
-### Adding Course Materials
-- Organize by course code and year in `courses/` directory
-- Use markdown files with proper navigation structure
-- Store slides/PDFs in course-specific subdirectories
+### Content Structure
 
-### Academic Content
-- Research publications listed in `index.md`
-- Papers and slides stored in `/papers/` directory
-- CV maintained as LaTeX source in `new_cv/` directory
+- `index.md`: Academic homepage (layout: archive) — publications, employment, education, talks, projects
+- `_posts/`: Blog posts in Korean about research experiences. Front matter uses `author`, `kor_author`, and `tags`
+- `courses/`: Organized as `courses/{course-code}/{year}/` with splash layouts. Slides stored as PDFs in subdirectories
+- `papers/`: Research paper PDFs and presentation slides
+- `new_cv/`: CV maintained as LaTeX source, built PDF at `new_cv/cv.pdf`
 
-## Theme Integration
+### Blog Post Front Matter
 
-This site extends the Minimal Mistakes theme:
-- Configuration in `_config.yml` follows MM conventions
-- Custom includes override theme defaults
-- SCSS customizations in `_sass/` directory
-- JavaScript enhancements for Firebase integration
+```yaml
+---
+title: "Post Title"
+date: YYYY-MM-DD
+layout: single
+author: Minseok Jeon
+kor_author: 전민석
+tags:
+  - tag-name
+---
+```
 
-## Development Workflow
+### JavaScript Build
 
-### Making Changes
-1. Edit content files (markdown in `_posts/`, `courses/`, etc.)
-2. For JavaScript changes: run `npm run watch:js` during development
-3. Test locally with `bundle exec jekyll serve`
-4. Build production assets with `npm run build:js` before committing
-5. Commit changes (site auto-deploys via GitHub Pages)
+`assets/js/main.min.js` is the bundled output. Source files: `assets/js/_main.js` + jQuery plugins in `assets/js/plugins/` + vendor jQuery. Built via UglifyJS with `banner.js` adding a copyright header. Always run `npm run build:js` before committing JS changes.
 
-### Firebase View Counter Development
-- Firebase config is in both `_config.yml` and hardcoded in `_includes/firebase-config.html`
-- Test view counter functionality requires actual page loads (not just Jekyll compilation)
-- View counts are stored with cleaned URLs as keys (special chars removed)
-- Session storage prevents multiple counts per browser session
+## Key Gotchas
 
-## Important Notes
-
-- **Deployment**: Site auto-deploys to GitHub Pages on push to master branch
-- **Firebase**: API keys are intentionally public (database has read-only rules)
-- **Assets**: JavaScript build process handles minification and banner addition
-- **Content**: All paper PDFs and academic materials are version-controlled
-- **Theme**: Extends Minimal Mistakes theme - avoid overriding core theme files when possible
+- **Firebase config duplication**: `_config.yml` and `_includes/firebase-config.html` both contain Firebase credentials — update both when changing
+- **`_config.yml` not hot-reloaded**: Must restart `jekyll serve` after editing `_config.yml`
+- **View counter testing**: Requires actual page loads in a browser, not just Jekyll compilation
+- **Deployment**: Auto-deploys on push to `master` — no staging environment
+- **Theme overrides**: Prefer adding new includes over modifying core Minimal Mistakes files. No custom SCSS partials exist currently — all styling comes from the theme
