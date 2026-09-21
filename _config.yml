@@ -1,0 +1,37 @@
+title: Minseok Jeon
+tagline: Programming Languages & Software Engineering
+description: >-
+  Homepage of Minseok Jeon, Assistant Professor at DGIST. Research on
+  programming language techniques, domain-specific languages, and program
+  synthesis for pointer analysis, explainable graph machine learning, and
+  system software testing.
+baseurl: ""
+url: "https://minseokjgit.github.io"
+
+author: Minseok Jeon
+email: minseok.jeon@dgist.ac.kr
+affiliation: DGIST
+github_username: MinseokJGit
+
+markdown: kramdown
+permalink: pretty
+theme: null
+
+navigation:
+  - text: About
+    url: /
+  - text: Members
+    url: /members/
+  - text: Research
+    url: /research/
+  - text: Publications
+    url: /publications/
+  - text: Courses
+    url: /courses/
+
+exclude:
+  - README.md
+  - Gemfile
+  - Gemfile.lock
+  - cv.pdf
+  - vendor
